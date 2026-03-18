@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员管理系统</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E40AF', // 专业商务蓝
+                        secondary: '#10B981', // 成功绿
+                        warning: '#F59E0B', // 警告黄
+                        danger: '#EF4444', // 错误红
+                        dark: '#1F2937', // 深灰
+                        'gray-medium': '#6B7280', // 中灰
+                        'gray-light': '#F3F4F6', // 浅灰
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        card: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .card {
+                @apply bg-white rounded-lg shadow-card p-4 transition-all-300;
+            }
+            .card:hover {
+                @apply shadow-card-hover;
+            }
+            .btn {
+                @apply px-4 py-2 rounded-md font-medium transition-all-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+            }
+            .btn-primary {
+                @apply bg-primary text-white hover:bg-primary/90 focus:ring-primary/50;
+            }
+            .btn-secondary {
+                @apply bg-secondary text-white hover:bg-secondary/90 focus:ring-secondary/50;
+            }
+            .btn-outline {
+                @apply border border-gray-300 text-dark hover:bg-gray-50 focus:ring-gray-500/50;
+            }
+            .input-field {
+                @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary;
+            }
+            .badge {
+                @apply px-2 py-1 text-xs font-medium rounded-full;
+            }
+            .badge-success {
+                @apply bg-secondary/20 text-secondary;
+            }
+            .badge-warning {
+                @apply bg-warning/20 text-warning;
+            }
+            .badge-danger {
+                @apply bg-danger/20 text-danger;
+            }
+            .tab-active {
+                @apply border-b-2 border-primary text-primary;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-light min-h-screen font-sans text-dark">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/bb9be1a7419e47baaf701f84bc254436~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391300&x-signature=1mkjMTAc%2BfqPGkR9%2BurzTlWZBCs%3D" alt="会员管理系统" class="h-8">
+                <h1 class="text-xl font-bold text-primary hidden sm:block">会员管理系统</h1>
+            </div>
+            <div class="relative">
+                <input type="text" placeholder="搜索会员或活动..." class="input-field pr-10 w-40 sm:w-64">
+                <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-medium">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="btn btn-outline hidden sm:block">
+                    <i class="fa fa-cog mr-1"></i> 设置
+                </button>
+                <div class="relative">
+                    <button class="flex items-center space-x-1">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/5cc41d1b157b4752ab31b54c162048b4~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391298&x-signature=P3NqEG3DVlzs%2BSubko%2FtZ0O14hA%3D" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="hidden sm:block">管理员</span>
+                        <i class="fa fa-angle-down text-gray-medium hidden sm:block"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="container mx-auto px-4 py-6 pb-24">
+        <!-- 内容区域 -->
+        <div id="content-area">
+            <!-- 仪表盘页面 -->
+            <div id="dashboard-page" class="page active">
+                <!-- 统计卡片 -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-medium text-sm">总会员数</p>
+                                <h3 class="text-2xl font-bold mt-1">1,248</h3>
+                                <p class="text-secondary text-xs mt-1">
+                                    <i class="fa fa-arrow-up"></i> 12% 较上月
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                <i class="fa fa-users text-primary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-medium text-sm">本月新增</p>
+                                <h3 class="text-2xl font-bold mt-1">86</h3>
+                                <p class="text-secondary text-xs mt-1">
+                                    <i class="fa fa-arrow-up"></i> 8% 较上月
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center">
+                                <i class="fa fa-user-plus text-secondary text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-medium text-sm">活动总数</p>
+                                <h3 class="text-2xl font-bold mt-1">32</h3>
+                                <p class="text-danger text-xs mt-1">
+                                    <i class="fa fa-arrow-down"></i> 3% 较上月
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-warning/10 rounded-full flex items-center justify-center">
+                                <i class="fa fa-calendar text-warning text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-medium text-sm">本月报名</p>
+                                <h3 class="text-2xl font-bold mt-1">256</h3>
+                                <p class="text-secondary text-xs mt-1">
+                                    <i class="fa fa-arrow-up"></i> 18% 较上月
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-danger/10 rounded-full flex items-center justify-center">
+                                <i class="fa fa-clipboard-check text-danger text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 图表区域 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold">会员增长趋势</h3>
+                            <div class="flex space-x-2">
+                                <button class="btn btn-outline text-xs py-1">月</button>
+                                <button class="btn btn-primary text-xs py-1">季</button>
+                                <button class="btn btn-outline text-xs py-1">年</button>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="membershipGrowthChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold">会员分布</h3>
+                            <div>
+                                <select class="input-field text-sm py-1">
+                                    <option>按等级</option>
+                                    <option>按性别</option>
+                                    <option>按年龄</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="memberDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近活动和推荐 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- 最近活动 -->
+                    <div class="card lg:col-span-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold">最近活动</h3>
+                            <button class="text-primary text-sm hover:underline">查看全部</button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-all-300">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c9729afc06224cbe96f45729cd2b684f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391307&x-signature=hEwAWsobHPn6X0pabG%2F33TjtCDE%3D" alt="活动封面" class="w-16 h-16 rounded object-cover">
+                                <div class="ml-4 flex-1">
+                                    <h4 class="font-medium">2024年度会员专属活动</h4>
+                                    <p class="text-sm text-gray-medium mt-1">2024-06-15 14:00 · 国际会议中心</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="badge badge-success">进行中</span>
+                                        <span class="text-xs text-gray-medium ml-3">
+                                            <i class="fa fa-user"></i> 已报名: 128/200
+                                        </span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline text-xs py-1">管理</button>
+                            </div>
+                            <div class="flex items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-all-300">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c9729afc06224cbe96f45729cd2b684f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391307&x-signature=hEwAWsobHPn6X0pabG%2F33TjtCDE%3D" alt="活动封面" class="w-16 h-16 rounded object-cover">
+                                <div class="ml-4 flex-1">
+                                    <h4 class="font-medium">新会员欢迎会</h4>
+                                    <p class="text-sm text-gray-medium mt-1">2024-06-20 10:00 · 会员中心</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="badge badge-warning">筹备中</span>
+                                        <span class="text-xs text-gray-medium ml-3">
+                                            <i class="fa fa-user"></i> 已报名: 45/100
+                                        </span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline text-xs py-1">管理</button>
+                            </div>
+                            <div class="flex items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-all-300">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c9729afc06224cbe96f45729cd2b684f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391307&x-signature=hEwAWsobHPn6X0pabG%2F33TjtCDE%3D" alt="活动封面" class="w-16 h-16 rounded object-cover">
+                                <div class="ml-4 flex-1">
+                                    <h4 class="font-medium">会员技能提升工作坊</h4>
+                                    <p class="text-sm text-gray-medium mt-1">2024-06-25 15:30 · 培训室A</p>
+                                    <div class="flex items-center mt-1">
+                                        <span class="badge badge-warning">筹备中</span>
+                                        <span class="text-xs text-gray-medium ml-3">
+                                            <i class="fa fa-user"></i> 已报名: 62/80
+                                        </span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline text-xs py-1">管理</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI推荐 -->
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold">AI智能推荐</h3>
+                            <div class="text-xs text-gray-medium">基于会员行为</div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-all-300">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                        <i class="fa fa-lightbulb-o text-primary"></i>
+                                    </div>
+                                    <h4 class="font-medium ml-3">会员活动推荐</h4>
+                                </div>
+                                <p class="text-sm text-gray-medium mt-2">根据历史参与数据，推荐"技能提升工作坊"给28位相关会员</p>
+                                <button class="btn btn-primary text-xs py-1 mt-3 w-full">立即发送</button>
+                            </div>
+                            <div class="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-all-300">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-warning/10 rounded-full flex items-center justify-center">
+                                        <i class="fa fa-bell text-warning"></i>
+                                    </div>
+                                    <h4 class="font-medium ml-3">会员到期提醒</h4>
+                                </div>
+                                <p class="text-sm text-gray-medium mt-2">有15位会员将在7天内到期，建议发送续费提醒</p>
+                                <button class="btn btn-primary text-xs py-1 mt-3 w-full">查看详情</button>
+                            </div>
+                            <div class="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-all-300">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center">
+                                        <i class="fa fa-users text-secondary"></i>
+                                    </div>
+                                    <h4 class="font-medium ml-3">沉默会员激活</h4>
+                                </div>
+                                <p class="text-sm text-gray-medium mt-2">识别出42位3个月未活动会员，建议发送活动邀请</p>
+                                <button class="btn btn-primary text-xs py-1 mt-3 w-full">生成方案</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 会员注册页面 -->
+            <div id="member-registration-page" class="page hidden">
+                <div class="card mb-6">
+                    <h2 class="text-xl font-bold mb-4">会员注册</h2>
+                    <form id="member-registration-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">姓名 <span class="text-danger">*</span></label>
+                                <input type="text" class="input-field" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">性别</label>
+                                <select class="input-field">
+                                    <option value="">请选择</option>
+                                    <option value="male">男</option>
+                                    <option value="female">女</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">出生日期</label>
+                                <input type="date" class="input-field">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">手机号码 <span class="text-danger">*</span></label>
+                                <input type="tel" class="input-field" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">电子邮箱</label>
+                                <input type="email" class="input-field">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">会员等级</label>
+                                <select class="input-field">
+                                    <option value="standard">标准会员</option>
+                                    <option value="premium">高级会员</option>
+                                    <option value="vip">VIP会员</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-1">地址</label>
+                                <input type="text" class="input-field">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-1">备注</label>
+                                <textarea class="input-field" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <button type="button" class="btn btn-outline" onclick="showPage('dashboard-page')">取消</button>
+                            <button type="submit" class="btn btn-primary">提交注册</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 会员管理页面 -->
+            <div id="member-management-page" class="page hidden">
+                <div class="card mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">会员管理</h2>
+                        <button class="btn btn-primary" onclick="showPage('member-registration-page')">
+                            <i class="fa fa-plus mr-1"></i> 新增会员
+                        </button>
+                    </div>
+                    
+                    <!-- 搜索和筛选 -->
+                    <div class="bg-gray-light p-4 rounded-lg mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <input type="text" placeholder="搜索会员姓名/手机号..." class="input-field">
+                            </div>
+                            <div>
+                                <select class="input-field">
+                                    <option value="">会员等级</option>
+                                    <option value="standard">标准会员</option>
+                                    <option value="premium">高级会员</option>
+                                    <option value="vip">VIP会员</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select class="input-field">
+                                    <option value="">会员状态</option>
+                                    <option value="active">活跃</option>
+                                    <option value="expired">过期</option>
+                                    <option value="paused">暂停</option>
+                                </select>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="btn btn-outline flex-1">
+                                    <i class="fa fa-search mr-1"></i> 搜索
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fa fa-refresh"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 会员列表 -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-medium uppercase tracking-wider">会员信息</th>
+                                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-medium uppercase tracking-wider">联系方式</th>
+                                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-medium uppercase tracking-wider">会员等级</th>
+                                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-medium uppercase tracking-wider">注册日期</th>
+                                    <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-medium uppercase tracking-wider">状态</th>
+                                    <th class="px-4 py-3 bg-gray-50 text-right text-xs font-medium text-gray-medium uppercase tracking-wider">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/5cc41d1b157b4752ab31b54c162048b4~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391298&x-signature=P3NqEG3DVlzs%2BSubko%2FtZ0O14hA%3D" alt="会员头像" class="w-10 h-10 rounded-full">
+                                            <div class="ml-3">
+                                                <div class="font-medium">张三</div>
+                                                <div class="text-xs text-gray-medium">会员号: M20240001</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div>138****1234</div>
+                                        <div class="text-xs text-gray-medium">zhangsan@example.com</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="badge bg-primary/20 text-primary">VIP会员</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                        2024-01-15
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="badge badge-success">活跃</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                                        <button class="text-danger hover:text-danger/80">删除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/5cc41d1b157b4752ab31b54c162048b4~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391298&x-signature=P3NqEG3DVlzs%2BSubko%2FtZ0O14hA%3D" alt="会员头像" class="w-10 h-10 rounded-full">
+                                            <div class="ml-3">
+                                                <div class="font-medium">李四</div>
+                                                <div class="text-xs text-gray-medium">会员号: M20240002</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div>139****5678</div>
+                                        <div class="text-xs text-gray-medium">lisi@example.com</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="badge bg-gray-200 text-gray-700">标准会员</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                        2024-02-20
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="badge badge-success">活跃</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                                        <button class="text-danger hover:text-danger/80">删除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/5cc41d1b157b4752ab31b54c162048b4~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391298&x-signature=P3NqEG3DVlzs%2BSubko%2FtZ0O14hA%3D" alt="会员头像" class="w-10 h-10 rounded-full">
+                                            <div class="ml-3">
+                                                <div class="font-medium">王五</div>
+                                                <div class="text-xs text-gray-medium">会员号: M20240003</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <div>135****9012</div>
+                                        <div class="text-xs text-gray-medium">wangwu@example.com</div>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="badge bg-warning/20 text-warning">高级会员</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                        2024-03-05
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap">
+                                        <span class="badge badge-danger">过期</span>
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary/80 mr-3">编辑</button>
+                                        <button class="text-danger hover:text-danger/80">删除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 分页 -->
+                    <div class="flex justify-between items-center mt-4">
+                        <div class="text-sm text-gray-medium">
+                            显示 1 至 3 条，共 1,248 条
+                        </div>
+                        <div class="flex space-x-1">
+                            <button class="btn btn-outline py-1 px-3">上一页</button>
+                            <button class="btn btn-primary py-1 px-3">1</button>
+                            <button class="btn btn-outline py-1 px-3">2</button>
+                            <button class="btn btn-outline py-1 px-3">3</button>
+                            <button class="btn btn-outline py-1 px-3">...</button>
+                            <button class="btn btn-outline py-1 px-3">42</button>
+                            <button class="btn btn-outline py-1 px-3">下一页</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 报名管理页面 -->
+            <div id="registration-management-page" class="page hidden">
+                <div class="card mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">活动管理</h2>
+                        <button class="btn btn-primary" onclick="showActivityCreationModal()">
+                            <i class="fa fa-plus mr-1"></i> 创建活动
+                        </button>
+                    </div>
+                    
+                    <!-- 活动列表 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- 活动卡片 -->
+                        <div class="card">
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c9729afc06224cbe96f45729cd2b684f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391307&x-signature=hEwAWsobHPn6X0pabG%2F33TjtCDE%3D" alt="活动封面" class="w-full h-40 object-cover rounded-t-lg">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold">2024年度会员专属活动</h3>
+                                    <span class="badge badge-success">进行中</span>
+                                </div>
+                                <div class="flex items-center mt-2 text-sm text-gray-medium">
+                                    <i class="fa fa-calendar mr-1"></i> 2024-06-15 14:00
+                                </div>
+                                <div class="flex items-center mt-1 text-sm text-gray-medium">
+                                    <i class="fa fa-map-marker mr-1"></i> 国际会议中心
+                                </div>
+                                <div class="flex justify-between items-center mt-4">
+                                    <div class="text-sm">
+                                        <span class="font-medium">128</span>/200 人已报名
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="btn btn-outline text-xs py-1 px-2">
+                                            <i class="fa fa-list"></i> 报名列表
+                                        </button>
+                                        <button class="btn btn-primary text-xs py-1 px-2">
+                                            <i class="fa fa-edit"></i> 编辑
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c9729afc06224cbe96f45729cd2b684f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391307&x-signature=hEwAWsobHPn6X0pabG%2F33TjtCDE%3D" alt="活动封面" class="w-full h-40 object-cover rounded-t-lg">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold">新会员欢迎会</h3>
+                                    <span class="badge badge-warning">筹备中</span>
+                                </div>
+                                <div class="flex items-center mt-2 text-sm text-gray-medium">
+                                    <i class="fa fa-calendar mr-1"></i> 2024-06-20 10:00
+                                </div>
+                                <div class="flex items-center mt-1 text-sm text-gray-medium">
+                                    <i class="fa fa-map-marker mr-1"></i> 会员中心
+                                </div>
+                                <div class="flex justify-between items-center mt-4">
+                                    <div class="text-sm">
+                                        <span class="font-medium">45</span>/100 人已报名
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="btn btn-outline text-xs py-1 px-2">
+                                            <i class="fa fa-list"></i> 报名列表
+                                        </button>
+                                        <button class="btn btn-primary text-xs py-1 px-2">
+                                            <i class="fa fa-edit"></i> 编辑
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c9729afc06224cbe96f45729cd2b684f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026031810005525A1F126DB811BA3656D&rrcfp=f06b921b&x-expires=1776391307&x-signature=hEwAWsobHPn6X0pabG%2F33TjtCDE%3D" alt="活动封面" class="w-full h-40 object-cover rounded-t-lg">
+                            <div class="p-4">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="font-bold">会员技能提升工作坊</h3>
+                                    <span class="badge badge-warning">筹备中</span>
+                                </div>
+                                <div class="flex items-center mt-2 text-sm text-gray-medium">
+                                    <i class="fa fa-calendar mr-1"></i> 2024-06-25 15:30
+                                </div>
+                                <div class="flex items-center mt-1 text-sm text-gray-medium">
+                                    <i class="fa fa-map-marker mr-1"></i> 培训室A
+                                </div>
+                                <div class="flex justify-between items-center mt-4">
+                                    <div class="text-sm">
+                                        <span class="font-medium">62</span>/80 人已报名
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="btn btn-outline text-xs py-1 px-2">
+                                            <i class="fa fa-list"></i> 报名列表
+                                        </button>
+                                        <button class="btn btn-primary text-xs py-1 px-2">
+                                            <i class="fa fa-edit"></i> 编辑
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <div class="container mx-auto flex justify-around">
+            <button class="nav-item flex flex-col items-center py-2 px-4 tab-active" data-page="dashboard-page">
+                <i class="fa fa-dashboard text-lg"></i>
+                <span class="text-xs mt-1">仪表盘</span>
+            </button>
+            <button class="nav-item flex flex-col items-center py-2 px-4" data-page="member-management-page">
+                <i class="fa fa-users text-lg"></i>
+                <span class="text-xs mt-1">会员管理</span>
+            </button>
+            <button class="nav-item flex flex-col items-center py-2 px-4" data-page="registration-management-page">
+                <i class="fa fa-calendar-check-o text-lg"></i>
+                <span class="text-xs mt-1">报名管理</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 创建活动模态框 -->
+    <div id="activity-creation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="font-bold text-lg">创建活动</h3>
+                <button onclick="hideActivityCreationModal()" class="text-gray-medium hover:text-dark">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <form id="activity-creation-form" class="p-4 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">活动标题 <span class="text-danger">*</span></label>
+                    <input type="text" class="input-field" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">活动描述</label>
+                    <textarea class="input-field" rows="3"></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">开始时间 <span class="text-danger">*</span></label>
+                        <input type="datetime-local" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">结束时间 <span class="text-danger">*</span></label>
+                        <input type="datetime-local" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">活动地点 <span class="text-danger">*</span></label>
+                        <input type="text" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">名额限制 <span class="text-danger">*</span></label>
+                        <input type="number" class="input-field" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">活动费用</label>
+                        <input type="number" step="0.01" class="input-field" value="0">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">活动状态</label>
+                        <select class="input-field">
+                            <option value="preparing">筹备中</option>
+                            <option value="ongoing">进行中</option>
+                            <option value="finished">已结束</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">活动要求</label>
+                    <textarea class="input-field" rows="2"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="btn btn-outline" onclick="hideActivityCreationModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">创建活动</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 页面切换功能
+        function showPage(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+                page.classList.remove('active');
+            });
+            
+            // 显示选中的页面
+            const selectedPage = document.getElementById(pageId);
+            if (selectedPage) {
+                selectedPage.classList.remove('hidden');
+                selectedPage.classList.add('active');
+            }
+            
+            // 更新导航栏状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.dataset.page === pageId) {
+                    item.classList.add('tab-active');
+                } else {
+                    item.classList.remove('tab-active');
+                }
+            });
+        }
+        
+        // 导航栏点击事件
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const pageId = item.dataset.page;
+                showPage(pageId);
+            });
+        });
+        
+        // 显示创建活动模态框
+        function showActivityCreationModal() {
+            document.getElementById('activity-creation-modal').classList.remove('hidden');
+        }
+        
+        // 隐藏创建活动模态框
+        function hideActivityCreationModal() {
+            document.getElementById('activity-creation-modal').classList.add('hidden');
+        }
+        
+        // 会员注册表单提交
+        document.getElementById('member-registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // 这里可以添加表单数据处理逻辑
+            alert('会员注册成功！');
+            showPage('member-management-page');
+        });
+        
+        // 活动创建表单提交
+        document.getElementById('activity-creation-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // 这里可以添加表单数据处理逻辑
+            alert('活动创建成功！');
+            hideActivityCreationModal();
+            // 刷新活动列表
+            showPage('registration-management-page');
+        });
+        
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            // 会员增长趋势图表
+            const membershipGrowthCtx = document.getElementById('membershipGrowthChart').getContext('2d');
+            new Chart(membershipGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    datasets: [{
+                        label: '会员数量',
+                        data: [1050, 1080, 1120, 1150, 1200, 1248],
+                        borderColor: '#1E40AF',
+                        backgroundColor: 'rgba(30, 64, 175, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 1000
+                        }
+                    }
+                }
+            });
+            
+            // 会员分布图表
+            const memberDistributionCtx = document.getElementById('memberDistributionChart').getContext('2d');
+            new Chart(memberDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['标准会员', '高级会员', 'VIP会员'],
+                    datasets: [{
+                        data: [650, 350, 248],
+                        backgroundColor: [
+                            '#6B7280',
+                            '#F59E0B',
+                            '#1E40AF'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
+    </script>
+</body>
+</html>
