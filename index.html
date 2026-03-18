@@ -1,967 +1,595 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员管理系统</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入 Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <!-- 自定义 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1E40AF', // 深蓝色为主色调
+                        secondary: '#F59E0B', // 黄色为辅助色
+                    },
+                    boxShadow: {
+                        'card-shadow': '0 2px 8px rgba(0, 0, 0, 0.08)',
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .safe-area-inset {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .content-auto {
+                content-visibility: auto;
+            }
+        }
+    </style>
 </head>
-<body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="zh-CN"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;会员管理系统 - 移动应用&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Tailwind CSS v3 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Font Awesome --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Chart.js --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 统一的 Tailwind 配置 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>tailwind.config = {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>theme: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>extend: {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>colors: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>primary: '#1E40AF', // 深蓝色</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>secondary: '#F59E0B', // 橙色</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>accent: '#10B981', // 绿色</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>dark: '#1F2937', // 深灰色</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>light: '#F3F4F6', // 浅灰色</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>fontFamily: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>sans: ['Inter', 'system-ui', 'sans-serif'],</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style type="text/tailwindcss"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@layer utilities {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.content-auto {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>content-visibility: auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.transition-all-300 {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.transition-all-500 {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>transition: all 0.5s ease;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.card-shadow {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.btn-primary {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply bg-primary text-white py-3 px-6 rounded-lg font-medium transition-all-300 hover:bg-primary/90 active:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/50;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.btn-secondary {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply bg-secondary text-white py-3 px-6 rounded-lg font-medium transition-all-300 hover:bg-secondary/90 active:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-secondary/50;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.btn-outline {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply border border-primary text-primary py-3 px-6 rounded-lg font-medium transition-all-300 hover:bg-primary/5 active:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/50;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.input-field {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-dark;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.badge {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply px-2 py-1 text-xs font-medium rounded-full;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.badge-primary {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply bg-primary/10 text-primary;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.badge-secondary {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply bg-secondary/10 text-secondary;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.badge-accent {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply bg-accent/10 text-accent;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.tab-active {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>@apply text-primary border-b-2 border-primary;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.safe-area-inset {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>padding-top: env(safe-area-inset-top, 0px);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>padding-bottom: env(safe-area-inset-bottom, 0px);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.scrollbar-hide::-webkit-scrollbar {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>.scrollbar-hide {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>-ms-overflow-style: none;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>scrollbar-width: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body class="bg-gray-50 text-dark min-h-screen font-sans"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 状态栏占位 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="h-12 bg-white safe-area-inset"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 顶部导航栏 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="container mx-auto px-4 h-12 flex items-center justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex items-center space-x-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h1 class="text-lg font-bold text-primary"&gt;会员管理系统&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex items-center space-x-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;button class="relative p-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;i class="fa fa-bell-o text-lg text-gray-600"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;i class="fa fa-user"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 主内容区域 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="container mx-auto px-4 pt-20 pb-24"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 页面内容 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="content-area"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- 仪表盘页面 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="dashboard-section" class="section active"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 欢迎区域 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-2xl font-bold mb-1"&gt;欢迎回来&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-gray-600 text-sm"&gt;今天是 &lt;span id="current-date"&gt;&lt;/span&gt;&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 统计卡片 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="grid grid-cols-2 gap-4 mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-gray-600 text-xs mb-1"&gt;总会员数&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-2xl font-bold text-primary"&gt;1,248&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center mt-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs text-green-600 flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-arrow-up mr-1"&gt;&lt;/i&gt; 12%</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs text-gray-500 ml-1"&gt;较上月&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-gray-600 text-xs mb-1"&gt;本月新增&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-2xl font-bold text-secondary"&gt;86&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center mt-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs text-green-600 flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-arrow-up mr-1"&gt;&lt;/i&gt; 8%</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs text-gray-500 ml-1"&gt;较上月&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-gray-600 text-xs mb-1"&gt;活动总数&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-2xl font-bold text-accent"&gt;32&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center mt-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs text-red-600 flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-arrow-down mr-1"&gt;&lt;/i&gt; 3%</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs text-gray-500 ml-1"&gt;较上月&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-gray-600 text-xs mb-1"&gt;本月报名&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-2xl font-bold text-primary"&gt;256&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center mt-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs text-green-600 flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-arrow-up mr-1"&gt;&lt;/i&gt; 18%</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span class="text-xs text-gray-500 ml-1"&gt;较上月&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 图表区域 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-6 mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- 会员增长趋势 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex justify-between items-center mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 class="font-bold text-primary"&gt;会员增长趋势&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex space-x-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-2 py-1 text-xs rounded bg-primary text-white"&gt;月&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-2 py-1 text-xs rounded border border-gray-300 text-gray-600"&gt;季&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-2 py-1 text-xs rounded border border-gray-300 text-gray-600"&gt;年&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-48"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="membershipGrowthChart"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- 会员分布 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex justify-between items-center mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 class="font-bold text-primary"&gt;会员分布&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;select id="memberDistributionSelect" class="input-field text-sm py-2 px-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option&gt;按等级&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option&gt;按性别&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option&gt;按年龄&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;option&gt;按省份&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-48"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="memberDistributionChart"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 最近活动 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-xl p-4 card-shadow mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-center mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-primary"&gt;最近活动&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="text-primary text-sm flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>查看全部 &lt;i class="fa fa-angle-right ml-1"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center p-3 border border-gray-100 rounded-lg hover:border-primary/30 transition-all-300"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-calendar text-primary text-xl"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="ml-3 flex-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-medium text-primary"&gt;2024年度会员专属活动&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="text-xs text-gray-600 mt-1"&gt;2024-06-15 14:00 · 国际会议中心&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center mt-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="badge badge-primary"&gt;进行中&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-500 ml-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;i class="fa fa-user mr-1"&gt;&lt;/i&gt; 128/200</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center p-3 border border-gray-100 rounded-lg hover:border-primary/30 transition-all-300"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-users text-secondary text-xl"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="ml-3 flex-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-medium text-primary"&gt;新会员欢迎会&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="text-xs text-gray-600 mt-1"&gt;2024-06-20 10:00 · 会员中心&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center mt-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="badge badge-secondary"&gt;筹备中&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-500 ml-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;i class="fa fa-user mr-1"&gt;&lt;/i&gt; 45/100</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center p-3 border border-gray-100 rounded-lg hover:border-primary/30 transition-all-300"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-graduation-cap text-accent text-xl"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="ml-3 flex-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-medium text-primary"&gt;会员技能提升工作坊&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;p class="text-xs text-gray-600 mt-1"&gt;2024-06-25 15:30 · 培训室A&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center mt-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="badge badge-secondary"&gt;筹备中&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-500 ml-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;i class="fa fa-user mr-1"&gt;&lt;/i&gt; 62/80</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 智能推荐 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-center mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-primary"&gt;智能推荐&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-xs text-gray-500"&gt;基于会员行为&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-3 border border-gray-100 rounded-lg hover:border-primary/30 transition-all-300"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i class="fa fa-lightbulb-o text-primary"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-medium text-primary ml-3"&gt;会员活动推荐&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-xs text-gray-600 mt-2"&gt;根据历史参与数据，推荐"技能提升工作坊"给28位相关会员&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;button class="btn-primary text-sm py-2 mt-3 w-full"&gt;立即发送&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-3 border border-gray-100 rounded-lg hover:border-primary/30 transition-all-300"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i class="fa fa-bell text-secondary"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-medium text-primary ml-3"&gt;会员到期提醒&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-xs text-gray-600 mt-2"&gt;有15位会员将在7天内到期，建议发送续费提醒&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;button class="btn-outline text-sm py-2 mt-3 w-full"&gt;查看详情&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- 会员管理页面 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="members-section" class="section hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 搜索和筛选 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mb-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="relative"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="text" placeholder="搜索会员..." class="input-field pl-10"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;i class="fa fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 会员列表 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-xl card-shadow mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="divide-y divide-gray-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;!-- 会员项 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>ZS</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div class="ml-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;h4 class="font-bold text-primary"&gt;张三&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-xs text-gray-600"&gt;会员号: M20240001&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="badge badge-primary"&gt;VIP会员&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center mt-3 space-x-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i class="fa fa-phone text-gray-400 mr-1"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-600"&gt;138****1234&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i class="fa fa-calendar text-gray-400 mr-1"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-600"&gt;2024-01-15&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-end space-x-2 mt-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-3 py-1 text-xs rounded border border-primary text-primary"&gt;编辑&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-3 py-1 text-xs rounded bg-green-50 text-green-600 border border-green-200"&gt;活跃&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>LS</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div class="ml-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;h4 class="font-bold text-primary"&gt;李四&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-xs text-gray-600"&gt;会员号: M20240002&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="badge badge-secondary"&gt;标准会员&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center mt-3 space-x-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i class="fa fa-phone text-gray-400 mr-1"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-600"&gt;139****5678&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i class="fa fa-calendar text-gray-400 mr-1"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-600"&gt;2024-02-20&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-end space-x-2 mt-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-3 py-1 text-xs rounded border border-primary text-primary"&gt;编辑&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-3 py-1 text-xs rounded bg-green-50 text-green-600 border border-green-200"&gt;活跃&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold text-lg"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>WW</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div class="ml-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;h4 class="font-bold text-primary"&gt;王五&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-xs text-gray-600"&gt;会员号: M20240003&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="badge badge-accent"&gt;高级会员&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center mt-3 space-x-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i class="fa fa-phone text-gray-400 mr-1"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-600"&gt;135****9012&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;i class="fa fa-calendar text-gray-400 mr-1"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-xs text-gray-600"&gt;2024-03-05&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-end space-x-2 mt-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-3 py-1 text-xs rounded border border-primary text-primary"&gt;编辑&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button class="px-3 py-1 text-xs rounded bg-red-50 text-red-600 border border-red-200"&gt;过期&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 分页 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="text-xs text-gray-600"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>显示 1-3 / 共 1,248 条</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex space-x-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa fa-angle-left"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white"&gt;1&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600"&gt;2&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600"&gt;3&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600"&gt;...&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600"&gt;42&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-gray-600"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa fa-angle-right"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- 活动管理页面 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="activities-section" class="section hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 活动列表 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-4 mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- 创建活动卡片 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-6 card-shadow flex flex-col items-center text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa fa-plus text-primary text-2xl"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-primary mb-1"&gt;创建新活动&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-xs text-gray-600 mb-4"&gt;创建专属会员活动，提升会员参与度&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;button class="btn-primary text-sm py-2 w-full"&gt;立即创建&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- 活动卡片 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl overflow-hidden card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-32 bg-primary/10 flex items-center justify-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa fa-calendar text-primary text-4xl"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-between items-start mb-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h3 class="font-bold text-primary"&gt;2024年度会员专属活动&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="badge badge-primary"&gt;进行中&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center text-xs text-gray-600 mb-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-calendar mr-1"&gt;&lt;/i&gt; 2024-06-15 14:00</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center text-xs text-gray-600 mb-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-map-marker mr-1"&gt;&lt;/i&gt; 国际会议中心</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-between items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="text-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="font-bold text-primary"&gt;128&lt;/span&gt;/200 人已报名</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex space-x-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;button class="px-3 py-1 text-xs rounded border border-primary text-primary"&gt;编辑&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;button class="px-3 py-1 text-xs rounded bg-primary text-white"&gt;查看&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl overflow-hidden card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-32 bg-secondary/10 flex items-center justify-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa fa-users text-secondary text-4xl"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-between items-start mb-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h3 class="font-bold text-primary"&gt;新会员欢迎会&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="badge badge-secondary"&gt;筹备中&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center text-xs text-gray-600 mb-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-calendar mr-1"&gt;&lt;/i&gt; 2024-06-20 10:00</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center text-xs text-gray-600 mb-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-map-marker mr-1"&gt;&lt;/i&gt; 会员中心</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-between items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="text-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="font-bold text-primary"&gt;45&lt;/span&gt;/100 人已报名</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex space-x-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;button class="px-3 py-1 text-xs rounded border border-primary text-primary"&gt;编辑&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;button class="px-3 py-1 text-xs rounded bg-primary text-white"&gt;查看&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl overflow-hidden card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-32 bg-accent/10 flex items-center justify-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;i class="fa fa-graduation-cap text-accent text-4xl"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-between items-start mb-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h3 class="font-bold text-primary"&gt;会员技能提升工作坊&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="badge badge-secondary"&gt;筹备中&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center text-xs text-gray-600 mb-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-calendar mr-1"&gt;&lt;/i&gt; 2024-06-25 15:30</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center text-xs text-gray-600 mb-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;i class="fa fa-map-marker mr-1"&gt;&lt;/i&gt; 培训室A</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex justify-between items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="text-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="font-bold text-primary"&gt;62&lt;/span&gt;/80 人已报名</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;div class="flex space-x-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;button class="px-3 py-1 text-xs rounded border border-primary text-primary"&gt;编辑&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;button class="px-3 py-1 text-xs rounded bg-primary text-white"&gt;查看&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- 数据分析页面 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="analytics-section" class="section hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- 图表区域 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-6 mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- 会员活跃度分析 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-primary mb-4"&gt;会员活跃度分析&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-48"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="memberActivityChart"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- 会员留存率 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-primary mb-4"&gt;会员留存率&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-48"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="memberRetentionChart"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- 会员消费分析 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-primary mb-4"&gt;会员消费分析&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-48"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="memberSpendingChart"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;!-- 活动参与度 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-xl p-4 card-shadow"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="font-bold text-primary mb-4"&gt;活动参与度&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="h-48"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="activityParticipationChart"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 底部导航栏 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 safe-area-inset"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex justify-around h-16"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-item flex flex-col items-center justify-center space-y-1 text-primary" data-section="dashboard"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa fa-dashboard text-lg"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-xs font-medium"&gt;仪表盘&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-item flex flex-col items-center justify-center space-y-1 text-gray-500" data-section="members"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa fa-users text-lg"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-xs font-medium"&gt;会员&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-item flex flex-col items-center justify-center space-y-1 text-gray-500" data-section="activities"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa fa-calendar text-lg"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-xs font-medium"&gt;活动&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nav-item flex flex-col items-center justify-center space-y-1 text-gray-500" data-section="analytics"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;i class="fa fa-bar-chart text-lg"&gt;&lt;/i&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span class="text-xs font-medium"&gt;分析&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/nav&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>// 设置当前日期</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', function() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const now = new Date();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 初始化图表</p>
-<p class="p1"><span class="Apple-converted-space">            </span>initCharts();</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 初始化页面切换</p>
-<p class="p1"><span class="Apple-converted-space">            </span>initPageNavigation();</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 初始化会员分布筛选</p>
-<p class="p1"><span class="Apple-converted-space">            </span>initMemberDistributionFilter();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// 页面导航</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function initPageNavigation() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const navItems = document.querySelectorAll('.nav-item');</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>navItems.forEach(item =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>item.addEventListener('click', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const sectionId = item.dataset.section;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>showSection(sectionId);</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>// 更新导航状态</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>navItems.forEach(navItem =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>if (navItem.dataset.section === sectionId) {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>navItem.classList.add('text-primary');</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>navItem.classList.remove('text-gray-500');</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>navItem.classList.remove('text-primary');</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>navItem.classList.add('text-gray-500');</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// 显示指定部分</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function showSection(sectionId) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 隐藏所有部分</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.section').forEach(section =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>section.classList.add('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>section.classList.remove('active');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 显示选中的部分</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const selectedSection = document.getElementById(`${sectionId}-section`);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (selectedSection) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>selectedSection.classList.remove('hidden');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>selectedSection.classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// 会员分布筛选功能</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function initMemberDistributionFilter() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const selectElement = document.getElementById('memberDistributionSelect');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (selectElement) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>selectElement.addEventListener('change', function() {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>const selectedOption = this.value;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>updateMemberDistributionChart(selectedOption);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// 更新会员分布图表</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function updateMemberDistributionChart(selectedOption) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let chartData = {};</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>switch(selectedOption) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>case '按等级':</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>chartData = {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['标准会员', '高级会员', 'VIP会员'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>data: [650, 350, 248],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: ['#6B7280', '#F59E0B', '#1E40AF']</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>break;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>case '按性别':</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>chartData = {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['男性', '女性', '其他'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>data: [580, 620, 48],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: ['#3B82F6', '#EC4899', '#8B5CF6']</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>break;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>case '按年龄':</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>chartData = {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['18-25岁', '26-35岁', '36-45岁', '46-55岁', '56岁以上'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>data: [280, 450, 320, 150, 48],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: ['#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#8B5CF6']</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>break;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>case '按省份':</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>chartData = {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['北京', '上海', '广东', '浙江', '江苏', '其他'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>data: [220, 180, 250, 160, 140, 298],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EC4899', '#8B5CF6', '#6B7280']</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>break;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (window.memberDistributionChart) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>window.memberDistributionChart.data.labels = chartData.labels;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>window.memberDistributionChart.data.datasets[0].data = chartData.data;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>window.memberDistributionChart.data.datasets[0].backgroundColor = chartData.backgroundColor;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>window.memberDistributionChart.update();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// 初始化图表</p>
-<p class="p1"><span class="Apple-converted-space">        </span>function initCharts() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 设置Chart.js全局配置</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Chart.defaults.color = '#6B7280';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Chart.defaults.borderColor = 'rgba(107, 114, 128, 0.2)';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Chart.defaults.font.family = 'Inter, system-ui, sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Chart.defaults.font.weight = '400';</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 会员增长趋势图表</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const membershipGrowthCtx = document.getElementById('membershipGrowthChart');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (membershipGrowthCtx) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>new Chart(membershipGrowthCtx, {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>type: 'line',</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>data: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['1月', '2月', '3月', '4月', '5月', '6月'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>datasets: [{</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: '会员数量',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [1050, 1080, 1120, 1150, 1200, 1248],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderColor: '#1E40AF',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: 'rgba(30, 64, 175, 0.1)',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>tension: 0.4,</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>fill: true</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}]</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>options: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>responsive: true,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>maintainAspectRatio: false,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>plugins: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>legend: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>display: false</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>scales: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>y: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>beginAtZero: false,</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>min: 1000,</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>color: 'rgba(107, 114, 128, 0.1)'</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>x: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>display: false</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 会员分布图表</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const memberDistributionCtx = document.getElementById('memberDistributionChart');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (memberDistributionCtx) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>window.memberDistributionChart = new Chart(memberDistributionCtx, {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>type: 'doughnut',</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>data: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['标准会员', '高级会员', 'VIP会员'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>datasets: [{</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [650, 350, 248],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: [</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>'#6B7280',</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>'#F59E0B',</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>'#1E40AF'</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderWidth: 0</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}]</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>options: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>responsive: true,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>maintainAspectRatio: false,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>plugins: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>legend: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>position: 'bottom',</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>labels: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>boxWidth: 12,</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>padding: 10,</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>font: {</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>size: 10</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>cutout: '70%'</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 会员活跃度图表</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const memberActivityCtx = document.getElementById('memberActivityChart');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (memberActivityCtx) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>new Chart(memberActivityCtx, {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>type: 'line',</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>data: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['1月', '2月', '3月', '4月', '5月', '6月'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>datasets: [{</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: '活跃会员',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [850, 880, 920, 950, 980, 1020],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderColor: '#1E40AF',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: 'rgba(30, 64, 175, 0.1)',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>tension: 0.4,</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>fill: true</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}]</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>options: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>responsive: true,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>maintainAspectRatio: false,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>plugins: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>legend: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>display: false</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>scales: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>y: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>color: 'rgba(107, 114, 128, 0.1)'</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>x: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>display: false</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 会员留存率图表</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const memberRetentionCtx = document.getElementById('memberRetentionChart');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (memberRetentionCtx) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>new Chart(memberRetentionCtx, {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>type: 'bar',</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>data: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['1月', '2月', '3月', '4月', '5月', '6月'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>datasets: [{</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: '留存率',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [85, 87, 88, 90, 92, 94],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: '#1E40AF'</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}]</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>options: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>responsive: true,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>maintainAspectRatio: false,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>plugins: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>legend: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>display: false</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>scales: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>y: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>color: 'rgba(107, 114, 128, 0.1)'</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>min: 80,</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>max: 100</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>x: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>display: false</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 会员消费分析图表</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const memberSpendingCtx = document.getElementById('memberSpendingChart');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (memberSpendingCtx) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>new Chart(memberSpendingCtx, {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>type: 'line',</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>data: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['1月', '2月', '3月', '4月', '5月', '6月'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>datasets: [{</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: '标准会员',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [12000, 13500, 14200, 15000, 16500, 17800],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderColor: '#6B7280',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>tension: 0.4,</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>fill: false</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}, {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: '高级会员',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [18000, 19500, 21000, 22500, 24000, 26500],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderColor: '#F59E0B',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>tension: 0.4,</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>fill: false</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}, {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: 'VIP会员',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [25000, 28000, 30000, 32500, 35000, 38000],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderColor: '#1E40AF',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>tension: 0.4,</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>fill: false</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}]</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>options: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>responsive: true,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>maintainAspectRatio: false,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>plugins: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>legend: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>position: 'bottom',</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>labels: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>boxWidth: 10,</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>padding: 8,</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>font: {</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>size: 9</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>scales: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>y: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>color: 'rgba(107, 114, 128, 0.1)'</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>x: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>display: false</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>// 活动参与度图表</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const activityParticipationCtx = document.getElementById('activityParticipationChart');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (activityParticipationCtx) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>new Chart(activityParticipationCtx, {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>type: 'radar',</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>data: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>labels: ['线上讲座', '线下活动', '工作坊', '社交聚会', '技能培训', '会员专属'],</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>datasets: [{</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>label: '参与度',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>data: [65, 78, 85, 70, 90, 88],</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>backgroundColor: 'rgba(30, 64, 175, 0.2)',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>borderColor: '#1E40AF',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointBackgroundColor: '#1E40AF',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointBorderColor: '#fff',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointHoverBackgroundColor: '#fff',</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>pointHoverBorderColor: '#1E40AF'</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}]</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>options: {</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>responsive: true,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>maintainAspectRatio: false,</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>scales: {</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>r: {</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>angleLines: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>color: 'rgba(107, 114, 128, 0.2)'</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>grid: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>color: 'rgba(107, 114, 128, 0.1)'</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>pointLabels: {</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>font: {</p>
-<p class="p1"><span class="Apple-converted-space">                                        </span>size: 9</p>
-<p class="p1"><span class="Apple-converted-space">                                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>},</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>suggestedMin: 0,</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>suggestedMax: 100</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<body class="bg-gray-50 font-sans text-gray-800 pb-16">
+    <main class="container mx-auto px-4 py-6">
+        <!-- 头部区域 -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-xl font-bold text-primary">会员管理系统</h1>
+                <p id="current-date" class="text-xs text-gray-500 mt-1"></p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button class="p-2 rounded-full bg-white shadow-md text-gray-600">
+                    <i class="fa fa-bell"></i>
+                </button>
+                <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
+                    AD
+                </div>
+            </div>
+        </div>
+
+        <!-- 仪表盘区域 -->
+        <section id="dashboard-section" class="section active">
+            <!-- 统计卡片 -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <p class="text-xs text-gray-500 mb-1">总会员数</p>
+                    <p class="text-xl font-bold text-primary">1,248</p>
+                    <p class="text-xs text-green-500 mt-1"><i class="fa fa-arrow-up"></i> 8.2% 环比增长</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <p class="text-xs text-gray-500 mb-1">本月新增</p>
+                    <p class="text-xl font-bold text-primary">156</p>
+                    <p class="text-xs text-green-500 mt-1"><i class="fa fa-arrow-up"></i> 12.5% 同比增长</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <p class="text-xs text-gray-500 mb-1">活跃会员</p>
+                    <p class="text-xl font-bold text-primary">1,020</p>
+                    <p class="text-xs text-green-500 mt-1"><i class="fa fa-arrow-up"></i> 5.3% 环比增长</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <p class="text-xs text-gray-500 mb-1">本月活动</p>
+                    <p class="text-xl font-bold text-primary">12</p>
+                    <p class="text-xs text-gray-500 mt-1"><i class="fa fa-calendar"></i> 4 场进行中</p>
+                </div>
+            </div>
+
+            <!-- 图表区域 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                <!-- 会员增长趋势 -->
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <h3 class="font-bold text-primary mb-4">会员增长趋势</h3>
+                    <div class="h-48">
+                        <canvas id="membershipGrowthChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 会员分布 -->
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-primary">会员分布</h3>
+                        <select id="memberDistributionSelect" class="text-xs border border-gray-200 rounded px-2 py-1">
+                            <option value="按等级">按等级</option>
+                            <option value="按性别">按性别</option>
+                            <option value="按年龄">按年龄</option>
+                            <option value="按省份">按省份</option>
+                        </select>
+                    </div>
+                    <div class="h-48">
+                        <canvas id="memberDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 近期活动 -->
+            <div class="bg-white rounded-xl p-4 card-shadow mb-6">
+                <h3 class="font-bold text-primary mb-4">近期活动</h3>
+                <div class="space-y-4">
+                    <div class="border-b border-gray-100 pb-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-primary">会员技能提升工作坊</h3>
+                            <span class="badge badge-secondary bg-secondary/10 text-secondary px-2 py-1 rounded text-xs">筹备中</span>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-600 mb-1">
+                            <i class="fa fa-calendar mr-1"></i> 2024-06-25 15:30
+                        </div>
+                        <div class="flex items-center text-xs text-gray-600 mb-3">
+                            <i class="fa fa-map-marker mr-1"></i> 培训室A
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm">
+                                <span class="font-bold text-primary">62</span>/80 人已报名
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 text-xs rounded border border-primary text-primary">编辑</button>
+                                <button class="px-3 py-1 text-xs rounded bg-primary text-white">查看</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 会员页面 -->
+        <section id="members-section" class="section hidden">
+            <div class="bg-white rounded-xl p-4 card-shadow mb-6">
+                <h3 class="font-bold text-primary mb-4">会员管理</h3>
+                <p class="text-gray-500 text-sm">会员列表及管理功能区域</p>
+            </div>
+        </section>
+
+        <!-- 活动页面 -->
+        <section id="activities-section" class="section hidden">
+            <div class="bg-white rounded-xl p-4 card-shadow mb-6">
+                <h3 class="font-bold text-primary mb-4">活动管理</h3>
+                <p class="text-gray-500 text-sm">活动列表及管理功能区域</p>
+            </div>
+        </section>
+
+        <!-- 数据分析页面 -->
+        <section id="analytics-section" class="section hidden">
+            <!-- 图表区域 -->
+            <div class="space-y-6 mb-6">
+                <!-- 会员活跃度分析 -->
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <h3 class="font-bold text-primary mb-4">会员活跃度分析</h3>
+                    <div class="h-48">
+                        <canvas id="memberActivityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 会员留存率 -->
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <h3 class="font-bold text-primary mb-4">会员留存率</h3>
+                    <div class="h-48">
+                        <canvas id="memberRetentionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 会员消费分析 -->
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <h3 class="font-bold text-primary mb-4">会员消费分析</h3>
+                    <div class="h-48">
+                        <canvas id="memberSpendingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 活动参与度 -->
+                <div class="bg-white rounded-xl p-4 card-shadow">
+                    <h3 class="font-bold text-primary mb-4">活动参与度</h3>
+                    <div class="h-48">
+                        <canvas id="activityParticipationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 safe-area-inset">
+        <div class="flex justify-around h-16">
+            <button class="nav-item flex flex-col items-center justify-center space-y-1 text-primary" data-section="dashboard">
+                <i class="fa fa-dashboard text-lg"></i>
+                <span class="text-xs font-medium">仪表盘</span>
+            </button>
+            <button class="nav-item flex flex-col items-center justify-center space-y-1 text-gray-500" data-section="members">
+                <i class="fa fa-users text-lg"></i>
+                <span class="text-xs font-medium">会员</span>
+            </button>
+            <button class="nav-item flex flex-col items-center justify-center space-y-1 text-gray-500" data-section="activities">
+                <i class="fa fa-calendar text-lg"></i>
+                <span class="text-xs font-medium">活动</span>
+            </button>
+            <button class="nav-item flex flex-col items-center justify-center space-y-1 text-gray-500" data-section="analytics">
+                <i class="fa fa-bar-chart text-lg"></i>
+                <span class="text-xs font-medium">分析</span>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        // 设置当前日期
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);
+            
+            // 初始化图表
+            initCharts();
+            
+            // 初始化页面切换
+            initPageNavigation();
+            
+            // 初始化会员分布筛选
+            initMemberDistributionFilter();
+        });
+        
+        // 页面导航
+        function initPageNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const sectionId = item.dataset.section;
+                    showSection(sectionId);
+                    
+                    // 更新导航状态
+                    navItems.forEach(navItem => {
+                        if (navItem.dataset.section === sectionId) {
+                            navItem.classList.add('text-primary');
+                            navItem.classList.remove('text-gray-500');
+                        } else {
+                            navItem.classList.remove('text-primary');
+                            navItem.classList.add('text-gray-500');
+                        }
+                    });
+                });
+            });
+        }
+        
+        // 显示指定部分
+        function showSection(sectionId) {
+            // 隐藏所有部分
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('active');
+            });
+            
+            // 显示选中的部分
+            const selectedSection = document.getElementById(`${sectionId}-section`);
+            if (selectedSection) {
+                selectedSection.classList.remove('hidden');
+                selectedSection.classList.add('active');
+            }
+        }
+        
+        // 会员分布筛选功能
+        function initMemberDistributionFilter() {
+            const selectElement = document.getElementById('memberDistributionSelect');
+            if (selectElement) {
+                selectElement.addEventListener('change', function() {
+                    const selectedOption = this.value;
+                    updateMemberDistributionChart(selectedOption);
+                });
+            }
+        }
+        
+        // 更新会员分布图表
+        function updateMemberDistributionChart(selectedOption) {
+            let chartData = {};
+            
+            switch(selectedOption) {
+                case '按等级':
+                    chartData = {
+                        labels: ['标准会员', '高级会员', 'VIP会员'],
+                        data: [650, 350, 248],
+                        backgroundColor: ['#6B7280', '#F59E0B', '#1E40AF']
+                    };
+                    break;
+                case '按性别':
+                    chartData = {
+                        labels: ['男性', '女性', '其他'],
+                        data: [580, 620, 48],
+                        backgroundColor: ['#3B82F6', '#EC4899', '#8B5CF6']
+                    };
+                    break;
+                case '按年龄':
+                    chartData = {
+                        labels: ['18-25岁', '26-35岁', '36-45岁', '46-55岁', '56岁以上'],
+                        data: [280, 450, 320, 150, 48],
+                        backgroundColor: ['#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#8B5CF6']
+                    };
+                    break;
+                case '按省份':
+                    chartData = {
+                        labels: ['北京', '上海', '广东', '浙江', '江苏', '其他'],
+                        data: [220, 180, 250, 160, 140, 298],
+                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EC4899', '#8B5CF6', '#6B7280']
+                    };
+                    break;
+            }
+            
+            if (window.memberDistributionChart) {
+                window.memberDistributionChart.data.labels = chartData.labels;
+                window.memberDistributionChart.data.datasets[0].data = chartData.data;
+                window.memberDistributionChart.data.datasets[0].backgroundColor = chartData.backgroundColor;
+                window.memberDistributionChart.update();
+            }
+        }
+        
+        // 初始化图表
+        function initCharts() {
+            // 设置Chart.js全局配置
+            Chart.defaults.color = '#6B7280';
+            Chart.defaults.borderColor = 'rgba(107, 114, 128, 0.2)';
+            Chart.defaults.font.family = 'Inter, system-ui, sans-serif';
+            Chart.defaults.font.weight = '400';
+            
+            // 会员增长趋势图表
+            const membershipGrowthCtx = document.getElementById('membershipGrowthChart');
+            if (membershipGrowthCtx) {
+                new Chart(membershipGrowthCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                        datasets: [{
+                            label: '会员数量',
+                            data: [1050, 1080, 1120, 1150, 1200, 1248],
+                            borderColor: '#1E40AF',
+                            backgroundColor: 'rgba(30, 64, 175, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 1000,
+                                grid: {
+                                    color: 'rgba(107, 114, 128, 0.1)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 会员分布图表
+            const memberDistributionCtx = document.getElementById('memberDistributionChart');
+            if (memberDistributionCtx) {
+                window.memberDistributionChart = new Chart(memberDistributionCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['标准会员', '高级会员', 'VIP会员'],
+                        datasets: [{
+                            data: [650, 350, 248],
+                            backgroundColor: [
+                                '#6B7280',
+                                '#F59E0B',
+                                '#1E40AF'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    boxWidth: 12,
+                                    padding: 10,
+                                    font: {
+                                        size: 10
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '70%'
+                    }
+                });
+            }
+            
+            // 会员活跃度图表
+            const memberActivityCtx = document.getElementById('memberActivityChart');
+            if (memberActivityCtx) {
+                new Chart(memberActivityCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                        datasets: [{
+                            label: '活跃会员',
+                            data: [850, 880, 920, 950, 980, 1020],
+                            borderColor: '#1E40AF',
+                            backgroundColor: 'rgba(30, 64, 175, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    color: 'rgba(107, 114, 128, 0.1)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 会员留存率图表
+            const memberRetentionCtx = document.getElementById('memberRetentionChart');
+            if (memberRetentionCtx) {
+                new Chart(memberRetentionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                        datasets: [{
+                            label: '留存率',
+                            data: [85, 87, 88, 90, 92, 94],
+                            backgroundColor: '#1E40AF'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    color: 'rgba(107, 114, 128, 0.1)'
+                                },
+                                min: 80,
+                                max: 100
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 会员消费分析图表
+            const memberSpendingCtx = document.getElementById('memberSpendingChart');
+            if (memberSpendingCtx) {
+                new Chart(memberSpendingCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                        datasets: [{
+                            label: '标准会员',
+                            data: [12000, 13500, 14200, 15000, 16500, 17800],
+                            borderColor: '#6B7280',
+                            tension: 0.4,
+                            fill: false
+                        }, {
+                            label: '高级会员',
+                            data: [18000, 19500, 21000, 22500, 24000, 26500],
+                            borderColor: '#F59E0B',
+                            tension: 0.4,
+                            fill: false
+                        }, {
+                            label: 'VIP会员',
+                            data: [25000, 28000, 30000, 32500, 35000, 38000],
+                            borderColor: '#1E40AF',
+                            tension: 0.4,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    boxWidth: 10,
+                                    padding: 8,
+                                    font: {
+                                        size: 9
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    color: 'rgba(107, 114, 128, 0.1)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 活动参与度图表
+            const activityParticipationCtx = document.getElementById('activityParticipationChart');
+            if (activityParticipationCtx) {
+                new Chart(activityParticipationCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['线上讲座', '线下活动', '工作坊', '社交聚会', '技能培训', '会员专属'],
+                        datasets: [{
+                            label: '参与度',
+                            data: [65, 78, 85, 70, 90, 88],
+                            backgroundColor: 'rgba(30, 64, 175, 0.2)',
+                            borderColor: '#1E40AF',
+                            pointBackgroundColor: '#1E40AF',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#1E40AF'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    color: 'rgba(107, 114, 128, 0.2)'
+                                },
+                                grid: {
+                                    color: 'rgba(107, 114, 128, 0.1)'
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 9
+                                    }
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 100
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>
